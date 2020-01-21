@@ -114,7 +114,7 @@ class parcel {
 	Into(res){
 		if (typeof this._IntoFunc == "function") {
 			this._IntoFunc(this,function(base){
-				packaging(base["status"],base["content"],res,base["Content-Type"]);
+				packaging(base["status"],base["content"],res,base["conType"]);
 			})
 		}else{
 			packaging(404,"页面不存在",res);

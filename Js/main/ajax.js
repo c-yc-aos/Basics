@@ -2,11 +2,11 @@
 //1　顺序执行
 //2　格式封装
 var _Ajax = {
-	xmlhttp : null ,
+	$xmlhttp : null ,
 	$AjaxList : [],
 	$run : false,
 	$runTime : 0,
-	get xmlhttp (){return null;},
+	get xmlhttp (){return this.xmlhttp;},
 	set xmlhttp (xmlHttpRequest){
 		 if ( this.xmlhttp === null ) {
 			this.xmlhttp = xmlHttpRequest

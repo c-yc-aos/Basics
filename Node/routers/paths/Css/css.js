@@ -1,11 +1,11 @@
 var file = require("../../../file/file.js");
-function GetHtml(parcel,backFunc){
-	console.log("Get Html Ok");
-	file.GetFile("html",parcel.GetPara("page")+".html",1,function (err,date){
+function GetCss(parcel,backFunc){
+	console.log("Get Css Ok");
+	file.GetFile("css",parcel.GetPara("FileName")+".css",1,function (err,date){
 		if(err){
 			backFunc({
 				"status" : 404,
-				"content": "Html File undefined",
+				"content": "Css File undefined",
 				"conType": "text/html",
 			});
 		}else{
@@ -20,12 +20,12 @@ function GetHtml(parcel,backFunc){
 module.exports = {
 	getpath : function(){
 		return {
-			 "url":"html",//Html
+			 "url":"css",//Html
 			 "func" : null,
 			 "maze":[
 				{
-					"url":"page#[a-z]+",
-					"func":GetHtml,
+					"url":"FileName#[a-z]+",
+					"func":GetCss,
 					"maze":[],
 				}
 			 ]
