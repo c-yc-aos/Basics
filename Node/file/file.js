@@ -1,11 +1,11 @@
 //file
 var fs = require("fs");
 var path = {
-	"html" : "../../Html/"
-	"js"   : "../../Js/"
-	"Css"  : "../../Css/"
-	"i"    : "../../Css/i/"
-	"img"  : "../../Img/"
+	"html" : "../../Html/",
+	"js"   : "../../Js/",
+	"Css"  : "../../Css/",
+	"i"    : "../../Css/i/",
+	"img"  : "../../Img/",
 }
 var cache = {};
 module.exports = {
@@ -22,5 +22,4 @@ module.exports = {
 			}
 		});
 	}
-	
 }

@@ -5,10 +5,25 @@ var querystring = require('querystring');
 var url = require('url');
 var util = require('util');
 
+var PathMain = require("./paths/pathMain.js");
+
 // 树状路由结构
-var tree = {} ;
+var tree = {
+	url:"/",//根目录
+	func:null,
+	maze:{},
+} ;
 // Into 收集路由表　并对路由进行分组
-function Into(){
+function ComboTree(_Path,_Tree){
+	for ( var i = 0 ; i < _Path['maze'].length ; i ++ ){
+		_Tree[_Path['maze'][i]["url"]] = {
+			"func" : _Path['maze'][i]["func"],
+			"maze" : {}
+		}
+		if ( _Path['maze'][i]["maze"] ){
+			ComboTree(_Path['maze'][i],_Tree[_Path['maze'][i]["url"]]["maze"])
+		}
+	}
 }
 //解释url
 function urlExplain(url){
@@ -32,18 +47,22 @@ function packaging(status,Base,res,ContetnType){
 //寻找路由 
 function seek(destination,_Para){
 	var intoTree = tree;
-	for ( var key in destination ){
-		if ( key === "" ) continue;//不计较多余路由 {不存在的路由} //url//get//info 此列 
+	for ( var index in destination ){
+		console.log("开始寻找 ",destination[index]);
+		console.log(intoTree["maze"][destination[index]]);
+		if ( destination[index] === "" ) continue;//不计较多余路由 {不存在的路由} //url//get//info 此列 
 		if ( !intoTree["maze"] ) break;
-		if ( intoTree["maze"][key] ){
-			intoTree = intoTree["maze"][key];
+
+		if ( intoTree["maze"][destination[index]] ){
+			intoTree = intoTree["maze"][destination[index]];
 		}else{
 			//正则路由格式　： /id#正则内容/
 			for ( var mazeKey in intoTree["maze"]){
-				var keyIndex = mazeKey.indexOf("#")
-				if ( keyIndex != -1 && (new RegExp(mazeKey.substring(keyIndex,mazeKey.length))).test(key) ){
+				var keyIndex = mazeKey.indexOf("#");
+				if ( keyIndex != -1 && (new RegExp(mazeKey.substring(keyIndex+1,mazeKey.length))).test(destination[index]) ){
 					intoTree = intoTree["maze"][mazeKey];
-					_Para[mazeKey.substring(0,keyIndex)] = _Para[mazeKey.substring(keyIndex,mazeKey.length)]
+					_Para[mazeKey.substring(0,keyIndex)] = destination[index];
+					console.log(_Para);
 					break;
 				}
 			}
@@ -95,7 +114,7 @@ class parcel {
 	Into(res){
 		if (typeof this._IntoFunc == "function") {
 			this._IntoFunc(this,function(base){
-				packaging(base["status"],base["content"],res,base["conType"]);
+				packaging(base["status"],base["content"],res,base["Content-Type"]);
 			})
 		}else{
 			packaging(404,"页面不存在",res);
@@ -108,4 +127,9 @@ module.exports = {
 		let Parcel = new parcel(req);//处理请求 
 		Parcel.Into(res);//处理响应 
 	},
+	Into : function() {
+		var pathList = PathMain.getpath();
+		ComboTree(pathList,tree["maze"]);
+		console.log(tree);
+	}
 }
