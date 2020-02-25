@@ -1,6 +1,5 @@
 var file = require("../../../file/file.js");
 function GetJs(parcel,backFunc){
-	console.log("Get Js Ok");
 	file.GetFile("js",parcel.GetPara("path")+".js",1,function (err,date){
 		if(err){
 			backFunc({
@@ -18,7 +17,6 @@ function GetJs(parcel,backFunc){
 	});
 }
 function GetMainJs(parcel,backFunc){
-	console.log("Get Main Js Ok");
 	file.GetFile("js","main/"+parcel.GetPara("path")+".js",1,function (err,date){
 		if(err){
 			backFunc({

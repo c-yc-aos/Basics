@@ -41,14 +41,13 @@ function packaging(status,Base,res,ContetnType){
 		case "object" : 
 		Base = JSON.stringify(Base); break;
 	}
-	console.log(status,Base,ContetnType);
+	// console.log(status,Base,ContetnType);
 	res.end(Base);
 }
 //寻找路由 
 function seek(destination,_Para){
 	var intoTree = tree;
 	for ( var index in destination ){
-		console.log("开始寻找 ",destination[index]);
 		console.log(intoTree["maze"][destination[index]]);
 		if ( destination[index] === "" ) continue;//不计较多余路由 {不存在的路由} //url//get//info 此列 
 		if ( !intoTree["maze"] ) break;
@@ -86,9 +85,11 @@ function POSTPara(req,parse,backFunc){
 //重新封装的请求及响应对象 
 //请求对象中有用的内容提取  请求类型 1  请求参数1   请求来源 请求头 请求将要使用那个驱动1
 class parcel {
-	constructor(req){
+	constructor(req,res){
 		this._parse = url.parse(req.url, true);
+		this._headers = req.headers;
 		this._method = req.method;
+		this.Ready = false;
 		this._Para = {};
 		const _this = this;
 		var PARAFUNCTION = null ;
@@ -106,7 +107,7 @@ class parcel {
 			}
 		});
 		this._IntoFunc = seek(urlExplain(this._parse.pathname),this._Para)
-		console.log(this._Para);
+
 	};
 	GetPara(key,defaults){
 		return this._Para[key] || defaults ;
@@ -127,9 +128,9 @@ module.exports = {
 		let Parcel = new parcel(req);//处理请求 
 		Parcel.Into(res);//处理响应 
 	},
+	//初始化方法
 	Into : function() {
 		var pathList = PathMain.getpath();
 		ComboTree(pathList,tree["maze"]);
-		console.log(tree);
 	}
 }

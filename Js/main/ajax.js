@@ -2,16 +2,16 @@
 //1　顺序执行
 //2　格式封装
 var _Ajax = {
-	$xmlhttp : null ,
+	_xmlhttp : null ,
 	$AjaxList : [],
 	$run : false,
 	$runTime : 0,
-	get xmlhttp (){return this.xmlhttp;},
+	get xmlhttp (){return this._xmlhttp;},
 	set xmlhttp (xmlHttpRequest){
-		 if ( this.xmlhttp === null ) {
-			this.xmlhttp = xmlHttpRequest
+		 if ( this._xmlhttp === null ) {
+			this._xmlhttp = xmlHttpRequest
 			$this = this
-			this.xmlhttp.onreadystatechange = function(){
+			this._xmlhttp.onreadystatechange = function(){
 				$this.$AjaxList[$this.$runTime].Log.Append({"status":this.readyState,"time":""});
 				switch( this.readyState ){
 				case 4 :
@@ -29,13 +29,13 @@ var _Ajax = {
 		return true;
 	},
 	appEnd : function (url , Type , input ){
-		this.xmlhttp.open(Type,url,true);
-		this.xmlhttp.send();
+		this._xmlhttp.open(Type,url,true);
+		this._xmlhttp.send();
 	},
 	$run : function (){
 		if (this.run) return;
-		this.xmlhttp.open(this.$AjaxList[this.$runTime].Type,this.$AjaxList[this.$runTime].Url,true);
-		this.xmlhttp.send();
+		this._xmlhttp.open(this.$AjaxList[this.$runTime].Type,this.$AjaxList[this.$runTime].Url,true);
+		this._xmlhttp.send();
 	}
 }
 if (window.XMLHttpRequest){
