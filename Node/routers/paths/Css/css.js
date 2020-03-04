@@ -1,18 +1,17 @@
 var file = require("../../../file/file.js");
 function GetCss(parcel,backFunc){
-	console.log("Get Css Ok");
-	file.GetFile("css",parcel.GetPara("FileName")+".css",1,function (err,date){
+	file.GetFile("css",parcel.Url("FileName")+".css",1,function (err,date){
 		if(err){
 			backFunc({
 				"status" : 404,
 				"content": "Css File undefined",
-				"conType": "text/html",
+				"conType": "text/css"+";charset=utf-8",
 			});
 		}else{
 			backFunc({
 				"status" : 200,
-				"content": date,
-				"conType": "text/html",
+				"content": date.toString(),
+				"conType": "text/css"+";charset=utf-8",	
 			});
 		}
 	});

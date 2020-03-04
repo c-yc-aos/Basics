@@ -1,34 +1,34 @@
 var file = require("../../../file/file.js");
 function GetJs(parcel,backFunc){
-	file.GetFile("js",parcel.GetPara("path")+".js",1,function (err,date){
+	file.GetFile("js",parcel.Url("path")+".js",1,function (err,date){
 		if(err){
 			backFunc({
 				"status" : 404,
 				"content": "Js File undefined",
-				"conType": "text/js",
+				"conType": "text/js"+";charset=utf-8",
 			});
 		}else{
 			backFunc({
 				"status" : 200,
 				"content": date,
-				"conType": "text/js",
+				"conType": "text/js"+";charset=utf-8",
 			});
 		}
 	});
 }
 function GetMainJs(parcel,backFunc){
-	file.GetFile("js","main/"+parcel.GetPara("path")+".js",1,function (err,date){
+	file.GetFile("js","main/"+parcel.Url("path")+".js",1,function (err,date){
 		if(err){
 			backFunc({
 				"status" : 404,
 				"content": "Main Js File undefined",
-				"conType": "text/js",
+				"conType": "text/js"+";charset=utf-8",
 			});
 		}else{
 			backFunc({
 				"status" : 200,
-				"content": date,
-				"conType": "text/js",
+				"content": date.toString(),
+				"conType": "text/js"+";charset=utf-8",
 			});
 		}
 	});	

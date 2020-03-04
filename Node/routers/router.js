@@ -4,6 +4,7 @@
 var querystring = require('querystring');
 var url = require('url');
 var util = require('util');
+var zlib = require('zlib');
 
 var PathMain = require("./paths/pathMain.js");
 
@@ -30,25 +31,53 @@ function urlExplain(url){
 	return url.split("/");
 }
 //返回信息包装 返回状态  值  响应对象 以及响应类型
-function packaging(status,Base,res,ContetnType){
-	ContetnType = ContetnType || "text/html" ;
-	res.writeHead(status,{"Content-Type":ContetnType+";charset=utf-8"});
-	switch (typeof Base){
+function packaging(Base,res,parcelos){
+	Base["conType"] = Base["conType"] || "text/html" ;
+	let writeHead = {};
+	writeHead["Content-Type"] = Base["conType"];
+	switch (typeof Base["content"]){
 		case "undefined":
-		Base = "";break;
+		Base["content"] = "";break;
 		case "function":
-		Base = Base() || "";break;
+		Base["content"] = Base["content"]() || "";break;
 		case "object" : 
-		Base = JSON.stringify(Base); break;
+		switch (Object.prototype.toString.call(Base["content"])){
+			case "[object Uint8Array]"://二进制文件流
+				Base["head"]["accept-ranges"] = "bytes";//强制二进制输出二进制文件
+			case "[object String]":
+			case "[object Number]":
+				break;
+			case "[object Array]":
+			case "[object Object]":
+				Base["content"] = JSON.stringify(Base["content"]); break;
+		}
 	}
-	// console.log(status,Base,ContetnType);
-	res.end(Base);
+    if(Base["head"]){
+    	for (var key in Base["head"]){
+    		writeHead[key] = Base["head"][key];
+    	}
+    }
+    let acceptEncoding = parcelos._headers['accept-encoding'];
+    if(acceptEncoding.indexOf('gzip')!=-1 && writeHead["content-encoding"] == 'gzip'){
+    	Base["content"] = zlib.gzipSync(Base["content"]);
+    }else if(acceptEncoding.indexOf('deflate')!=-1 && writeHead["content-encoding"] == 'deflate'){
+    	Base["content"] = zlib.deflateSync(Base["content"]);
+    }
+	res.writeHead(Base["status"],writeHead);
+	switch (writeHead["accept-ranges"]){
+		case "bytes":
+			res.write(Base["content"],'binary');
+			break;
+		default:
+			res.write(Base["content"]);
+			break;
+	}
+	res.end();
 }
 //寻找路由 
 function seek(destination,_Para){
 	var intoTree = tree;
 	for ( var index in destination ){
-		console.log(intoTree["maze"][destination[index]]);
 		if ( destination[index] === "" ) continue;//不计较多余路由 {不存在的路由} //url//get//info 此列 
 		if ( !intoTree["maze"] ) break;
 
@@ -60,8 +89,7 @@ function seek(destination,_Para){
 				var keyIndex = mazeKey.indexOf("#");
 				if ( keyIndex != -1 && (new RegExp(mazeKey.substring(keyIndex+1,mazeKey.length))).test(destination[index]) ){
 					intoTree = intoTree["maze"][mazeKey];
-					_Para[mazeKey.substring(0,keyIndex)] = destination[index];
-					console.log(_Para);
+					_Para["url"][mazeKey.substring(0,keyIndex)] = destination[index];
 					break;
 				}
 			}
@@ -69,8 +97,12 @@ function seek(destination,_Para){
 	}
 	return intoTree["func"];
 }
-function GETPara(req,parse,backFunc){
-	backFunc(parse.query);
+function GETPara(parse){
+	var getPara = {};
+	for ( var key in parse.query ){
+		getPara[key] = parse.query[key] || "";
+	}
+	return getPara;
 }
 function POSTPara(req,parse,backFunc){
 	var post = "";
@@ -82,43 +114,47 @@ function POSTPara(req,parse,backFunc){
 		backFunc(post);
 	})
 }
-//重新封装的请求及响应对象 
-//请求对象中有用的内容提取  请求类型 1  请求参数1   请求来源 请求头 请求将要使用那个驱动1
 class parcel {
 	constructor(req,res){
 		this._parse = url.parse(req.url, true);
 		this._headers = req.headers;
 		this._method = req.method;
 		this.Ready = false;
-		this._Para = {};
-		const _this = this;
-		var PARAFUNCTION = null ;
-		switch (this._method) {
-			case "GET":
-			PARAFUNCTION = GETPara;break;
-			case "POST":
-			PARAFUNCTION = POSTPara;break;
-
-		}
-		PARAFUNCTION(req,this._parse,function(JsonBase){
+		this._Para = {
+			"get" : {},
+			"post": {},
+			"url" : {},
+		};
+		let _this = this;
+		this._Para["get"] = GETPara(this._parse);
+		POSTPara(req,this._parse,function(JsonBase){
 			for ( var key in JsonBase ){
-				_this._Para[key] = JsonBase[key];
-				_this.Ready = true;
+				_this._Para["post"][key] = JsonBase[key];
 			}
+			_this.Ready = true;
 		});
-		this._IntoFunc = seek(urlExplain(this._parse.pathname),this._Para)
-
+		this._IntoFunc = seek(urlExplain(this._parse.pathname),this._Para);
 	};
-	GetPara(key,defaults){
-		return this._Para[key] || defaults ;
+	Get(key,defaults){
+		return this._Para["get"][key] == undefined ? defaults : this._Para["get"][key];
 	};
+	Post(key,defaults){
+		return this._Para["post"][key] == undefined ? defaults : this._Para["post"][key];
+	};
+	Url(key,defaults){
+		return this._Para["url"][key] == undefined ? defaults : this._Para["url"][key];
+	}
 	Into(res){
+		let _this = this;
 		if (typeof this._IntoFunc == "function") {
 			this._IntoFunc(this,function(base){
-				packaging(base["status"],base["content"],res,base["conType"]);
+				packaging(base,res,_this);
 			})
 		}else{
-			packaging(404,"页面不存在",res);
+			packaging({
+				"status":404,
+				"content":"Not Found",
+			},res,_this);
 		}
 	}
 };

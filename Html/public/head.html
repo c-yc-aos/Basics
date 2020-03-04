@@ -13,12 +13,15 @@
 
 	<meta name="revisit-after" content="7 days" >
 
-	<title id="head_PageTitle"></title>
+	<title id="head_PageTitle">{{ PageTitle }}</title>
 
-	<link rel="icon" href="{{ icon_href }}">
-	<css id="head_CssList"></css>
+<link rel="icon" type="image/png" sizes="144x144" href="{{ icon_href }}"/>
+<link rel="apple-touch-icon" type="image/png" sizes="144x144" href="{{ icon_href }}"/>
+	<css id="head_CssList">
+		<link rel="stylesheet" href="/css/main">
+	</css>
 	<js  id="head_JsList" >
-		<script type="text/javascript" href="/js/main/main.js">
+		<script type="text/javascript" src="/js/main/main">
 		</script>
 	</js>
 </head>
