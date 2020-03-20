@@ -1,0 +1,39 @@
+top{
+	display: block;
+	width: 100vw;
+	height 6vh;
+	line-height: 6vh;
+	font-size: 3vh;
+	color:#fff;
+	background: #999;
+	padding: 0;
+	margin: 0;
+}
+top userinfo{
+	float: right;
+	display: block;
+	
+}
+top userinfo show{
+	display: block;
+}
+top userinfo show img{
+	float:left;
+	height: 2em;
+	width: 2em;
+	margin: 0;
+	padding: .5em;
+	line-height: 2em;
+}
+top userinfo login{
+	display: none;
+}
+top userinfo login .login{
+	color :#ff0;
+}
+top userinfo[uid='0'] show{
+	display: none;	
+}
+top userinfo[uid='0'] login{
+	display: block;
+}

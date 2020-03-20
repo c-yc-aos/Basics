@@ -10,7 +10,7 @@ function GetJs(parcel,backFunc){
 		}else{
 			backFunc({
 				"status" : 200,
-				"content": date,
+				"content": date.toString(),
 				"conType": "text/js"+";charset=utf-8",
 			});
 		}

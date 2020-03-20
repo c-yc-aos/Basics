@@ -27,7 +27,9 @@ function GetHtml(parcel,backFunc){
 				"author"     : "测试内容", 
 				"keywords"   : "测试内容",
 				"description": "测试内容",
-				"icon_href"  : "/i/icon.jpg"
+				"icon_href"  : "/i/icon.jpg",
+				"userhead"   : "/image/head.jpg",
+				"username"   : "雨化作云",
 			};
 			if(parcel.Get("module") != undefined){
 				backFunc({

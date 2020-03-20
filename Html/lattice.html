@@ -1,0 +1,22 @@
+
+<aoscss href="/css/lattice"></aoscss>
+<aosjs src="/js/lattice"></aosjs>
+<div class="box">
+	<canvas id="screen" width="320px" height="320px"></canvas>
+</div>
+<div class="panel">
+	<label>
+		输入文本:
+	<input id="in" type="text" />
+	</label>
+	<label>
+		延时(毫秒):
+	<input type="number" id="time" value="500"/>
+	</label>
+	<label>
+		过滤值(0-255):
+	<input type="number" id="gray" value="188" max="255" min="0"/>
+	</label>
+	<button aos-click="showFont">显示</button>
+	<canvas id="font" width="32px" height="32px"></canvas>
+</div>

@@ -1,0 +1,7 @@
+box {
+	position: absolute;
+	top:6vh;
+	left:0;right:0;
+	bottom: 12vh;
+	background: #f00;
+}

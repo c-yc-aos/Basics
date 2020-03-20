@@ -1,4 +1,4 @@
-!<!DOCTYPE html>
+<!DOCTYPE html>
 <html>
 <head >
 	<meta name="keywords" id="head_keywords" content="{{ keywords }}"/>
@@ -15,14 +15,30 @@
 
 	<title id="head_PageTitle">{{ PageTitle }}</title>
 
-<link rel="icon" type="image/png" sizes="144x144" href="{{ icon_href }}"/>
-<link rel="apple-touch-icon" type="image/png" sizes="144x144" href="{{ icon_href }}"/>
+	<link rel="icon" type="image/png" sizes="144x144" href="{{ icon_href }}"/>
+	<link rel="apple-touch-icon" type="image/png" sizes="144x144" href="{{ icon_href }}"/>
+
 	<css id="head_CssList">
 		<link rel="stylesheet" href="/css/main">
+		<link rel="stylesheet" href="/css/top">
 	</css>
 	<js  id="head_JsList" >
-		<script type="text/javascript" src="/js/main/main">
-		</script>
+		<script type="text/javascript" src="/js/main/main"></script>
+		<script type="text/javascript" src="/js/main/dom"></script>
 	</js>
 </head>
 <body>
+<top>
+	<userinfo uid="{{ uid||0 }}">	
+		<login>
+			<a class="login">登录</a>
+			<a >注册</a>
+		</login>
+		<show>
+			<img src="{{ userhead }}">
+			<span>{{ username }}</span>
+			<a>登出</a>
+		</show>
+	</userinfo>
+	TopLogo
+</top>

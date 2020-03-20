@@ -1,4 +1,20 @@
 /*main.css*/
-h1{
-	color:red;
+*,html,body{
+	box-sizing: border-box;
+	border: none;
+	padding: 0;
+	margin: 0;
+}
+aoscss,aosjs{
+	width: 0;
+	height: 0;
+	display: none;
+}
+html,body{
+	width:100vw;
+	overflow-x: hidden;
+	font-size:2vw;	
+}
+[aos-click],[aos-touch]{
+	cursor: pointer;
 }
