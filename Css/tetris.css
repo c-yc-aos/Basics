@@ -1,0 +1,73 @@
+*{
+	padding: 0;
+	margin: 0;
+	box-sizing: border-box;
+}
+body,html{
+	height: 100%;
+}
+.body{
+	width: 1200px;
+	margin: 0 auto;
+	height: 100%;
+	background: #999;
+}
+.game{
+	height: 100%;
+	background: #666;
+	overflow: hidden;
+}
+.game h5{
+	height: 60px;
+	line-height: 60px;
+	font-size: 28px;
+}
+.game p{
+	height: 30px;
+	line-height: 30px;
+	font-size: 26px;
+	color:#f99;
+}
+.game p span{
+	font-size: 16px;
+	color:#f33;
+	padding: 0 2em 0;
+}
+.game .gameTitle{
+	color:#f9a278;
+	padding: 0 60px 0;
+	background: url(/i/block.png) 10px 10px no-repeat;
+	background-size: 40px 40px;
+}
+.game .main{
+	width: 300px;
+	height: 630px;
+	background: #fff;
+	margin: 0 30px;
+	position: relative;
+}
+.game b{
+	width: 30px;
+	height: 30px;
+	border: 2px solid #fff;
+	position: absolute;    
+	transition: all 0.1s;    
+	box-shadow: inset 3px 2px 4px black;
+}
+.game h6{
+	line-height: 140px;
+}
+.game h6 s {
+	width: 120px;
+	height: 120px;
+	background-color: #fff;
+	display: inline-block;
+	vertical-align: middle;
+	position: relative;
+}
+.left{
+	float: left;
+}
+.right{
+	float:right;
+}
